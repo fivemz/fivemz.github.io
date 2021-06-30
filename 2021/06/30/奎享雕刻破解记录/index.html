@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="奎享雕刻1.7.8大刀阔斧的破解记录 本文仅用于学习交流，禁止用于商业用途 起因为什么想起来尝试破解这个呢，这是公司用的写字机的上位机，发现里边的程序时java的，插着加密狗，有点好奇java是怎么读狗的，到最后也没研究明白，只研究到了它是调用dll的某个函数读狗的，dll逆向还看不懂也是因为它是java的，会写java，有初步的了解，才敢下手尝试的。……">
+<meta name="keywords" content="写字机,奎享雕刻,破解">
+<meta property="og:type" content="article">
+<meta property="og:title" content="奎享雕刻破解记录">
+<meta property="og:url" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/index.html">
+<meta property="og:site_name" content="九十">
+<meta property="og:description" content="奎享雕刻1.7.8大刀阔斧的破解记录 本文仅用于学习交流，禁止用于商业用途 起因为什么想起来尝试破解这个呢，这是公司用的写字机的上位机，发现里边的程序时java的，插着加密狗，有点好奇java是怎么读狗的，到最后也没研究明白，只研究到了它是调用dll的某个函数读狗的，dll逆向还看不懂也是因为它是java的，会写java，有初步的了解，才敢下手尝试的。……">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/1.png">
+<meta property="og:image" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/2.png">
+<meta property="og:image" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/3.png">
+<meta property="og:image" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/4.png">
+<meta property="og:image" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/5.png">
+<meta property="og:image" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/6.png">
+<meta property="og:image" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/7.png">
+<meta property="og:image" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/8.png">
+<meta property="og:image" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/9.png">
+<meta property="og:image" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/10.png">
+<meta property="og:image" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/11.png">
+<meta property="og:image" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/12.png">
+<meta property="og:image" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/13.png">
+<meta property="og:image" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/14.png">
+<meta property="og:image" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/15.png">
+<meta property="og:image" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/16.png">
+<meta property="og:image" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/17.png">
+<meta property="og:image" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/18.png">
+<meta property="og:image" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/19.png">
+<meta property="og:image" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/20.png">
+<meta property="og:image" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/21.png">
+<meta property="og:image" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/22.png">
+<meta property="og:image" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/23.png">
+<meta property="og:image" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/24.png">
+<meta property="og:image" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/25.png">
+<meta property="og:image" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/26.png">
+<meta property="og:image" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/27.png">
+<meta property="og:updated_time" content="2021-06-30T14:54:26.896Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="奎享雕刻破解记录">
+<meta name="twitter:description" content="奎享雕刻1.7.8大刀阔斧的破解记录 本文仅用于学习交流，禁止用于商业用途 起因为什么想起来尝试破解这个呢，这是公司用的写字机的上位机，发现里边的程序时java的，插着加密狗，有点好奇java是怎么读狗的，到最后也没研究明白，只研究到了它是调用dll的某个函数读狗的，dll逆向还看不懂也是因为它是java的，会写java，有初步的了解，才敢下手尝试的。……">
+<meta name="twitter:image" content="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/1.png">
+  <link rel="canonical" href="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+
+  <script async src="/js/cursor/fireworks.js"></script>
+  <title>奎享雕刻破解记录 | 九十</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?e38f93d22ccbe9c57821e76f94aba8aa";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">九十</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">七八九十</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://fivemz.github.io/2021/06/30/奎享雕刻破解记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="mz Wu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="九十">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">奎享雕刻破解记录
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2021-06-30 21:24:18 / 修改时间：22:54:26" itemprop="dateCreated datePublished" datetime="2021-06-30T21:24:18+08:00">2021-06-30</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/破解/" itemprop="url" rel="index"><span itemprop="name">破解</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="奎享雕刻1-7-8大刀阔斧的破解记录"><a href="#奎享雕刻1-7-8大刀阔斧的破解记录" class="headerlink" title="奎享雕刻1.7.8大刀阔斧的破解记录"></a>奎享雕刻1.7.8大刀阔斧的破解记录</h1><blockquote>
+<h2 id="本文仅用于学习交流，禁止用于商业用途"><a href="#本文仅用于学习交流，禁止用于商业用途" class="headerlink" title="本文仅用于学习交流，禁止用于商业用途"></a>本文仅用于学习交流，禁止用于商业用途</h2></blockquote>
+<h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>为什么想起来尝试破解这个呢，这是公司用的写字机的上位机，发现里边的程序时java的，插着加密狗，有点好奇java是怎么读狗的，到最后也没研究明白，只研究到了它是调用dll的某个函数读狗的，dll逆向还看不懂<br>也是因为它是java的，会写java，有初步的了解，才敢下手尝试的。……</p>
+<a id="more"></a>
+
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>破解的过程中也是取巧了，没有对解密函数进行分析（实在看不懂），提取了了已有的一个加密狗的生成的值，硬编码到了程序里边，令读狗函数固定返回这个硬编码。<br>废话也会很多，很详细的记录了过程</p>
+<h2 id="心得"><a href="#心得" class="headerlink" title="心得"></a>心得</h2><p>勇于尝试，车到山前必有路。</p>
+<p>中途遇到了一些小麻烦，反正是解决了。后边详述</p>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><h3 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h3><ol>
+<li>jar包解包工具：</li>
+</ol>
+<blockquote>
+<ul>
+<li>winrar(足够了)</li>
+</ul>
+</blockquote>
+<ol start="2">
+<li>jar反编译工具：</li>
+</ol>
+<blockquote>
+<ul>
+<li>jd-gui-1.6.6.jar</li>
+<li>jadx-gui-1.2.0-no-jre-win.exe</li>
+<li>luyten-0.5.4.exe(没用上)</li>
+</ul>
+</blockquote>
+<ol start="3">
+<li>class 字节码浏览器</li>
+</ol>
+<blockquote>
+<ul>
+<li>jclasslib_win64_5_8.exe</li>
+</ul>
+</blockquote>
+<ol start="4">
+<li>十六进制编辑器</li>
+</ol>
+<blockquote>
+<ul>
+<li>010Editor v11.0.1 汉化特别版</li>
+</ul>
+</blockquote>
+<ol start="5">
+<li>dll查看器</li>
+</ol>
+<blockquote>
+<ul>
+<li>IDA_Pro_v7.0_Portable</li>
+</ul>
+</blockquote>
+<p>最后，写java代码的idea就不用介绍了吧，各位爱用啥用啥就是了</p>
+<h3 id="下载-安装-分析"><a href="#下载-安装-分析" class="headerlink" title="下载/安装/分析"></a>下载/安装/分析</h3><p>下载安装跳过</p>
+<ol>
+<li>打开文件夹看看<br><img src="1.png" alt="Alt text" title="安装文件夹"></li>
+</ol>
+<p>由于不会exe的逆向，而且体积这么大的一个jar，很值得打开瞧瞧。<br>直接用jar反编译工具打开，先找main函数（java的入口函数）</p>
+<ol start="2">
+<li>用jadx打开映入眼帘的就是com了，找吧，熟悉的launcher，很顺利，就在这里，那接下来的工作就比较简单了：<br>复制这个class的反编译代码，扔idea里开始做手术。<br>肯定提示缺包， 将这个大jar包作为lib引入就行（后边才知道，差点死在这一步，jar包没有混淆。我才能顺利的作为lib引入）</li>
+</ol>
+<p><img src="2.png" alt="Alt text" title="Launcher_guard.jar"></p>
+<ol start="3">
+<li>扔idea里之后就可以进行分析啦，上边无非都是读配置，环境检查<br>从这里才是引起我注意的代码。<br>i只是读了个配置，觉得有用，输出来看看，最后发现，似乎没啥用<br>l就是了，l就是读取的加密狗的函数，追进去看看都做了什么操作。</li>
+</ol>
+<p><img src="3.png" alt="Alt text" title="main函数分析"></p>
+<ol start="4">
+<li>追l<br><img src="4.png" alt="Alt text" title="追l"><br>好家伙，就一行，继续追,一眼望去 一堆return “”;<br>既然是注册码，return “”;的统统干掉！<br><img src="5.png" alt="Alt text" title="继续追"><br>代码瞬间清爽了许多，可以看到  这个outstring一定就是狗里的东西了，而上边的DevicePath,ID1,ID2，就肯定是狗的信息了。<br>这就是我在这个函数中间写出outsting到文件之后，硬编码到return里了：<br><img src="6.png" alt="Alt text" title="简化"></li>
+</ol>
+<p>然后我还尝试用IDA查看了这个jsyunew3.dll的NewReadString，嗯，压根看不懂。就更没办法写注册机了（加密狗写注册机有毛用！摔！）</p>
+<p>这个类上边有这个名字，这应该就是java加载dll的方式，但是还没研究明白，知道它加载了dll，调用了dll的函数，研究破解来说知道这些够用了，<br>就是这行调用了dll，确信，下边这些肯定就是形如接口一样的东西了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">static &#123;</span><br><span class="line">    System.load(b.e(String.valueOf(String.valueOf(Platform.is64Bit() ? &quot;x64&quot; : &quot;x86&quot;)) + &quot;/jsyunew3.dll&quot;).getAbsolutePath());</span><br><span class="line">&#125;</span><br><span class="line">public static native int GetVersion(final String p0);</span><br><span class="line"></span><br><span class="line">public static native int GetVersionEx(final String p0);</span><br><span class="line"></span><br><span class="line">public static native long GetID_1(final String p0);</span><br><span class="line"></span><br><span class="line">public static native long GetID_2(final String p0);</span><br><span class="line"></span><br><span class="line">public static native long get_LastError();</span><br><span class="line"></span><br><span class="line">public static native String FindPort(final int p0);</span><br><span class="line"></span><br><span class="line">public static native String NewReadString(final int p0, final int p1, final String p2, final String p3, final String p4);</span><br><span class="line"></span><br><span class="line">public static native int ReSet(final String p0);</span><br></pre></td></tr></table></figure>
+
+<p>然后我就想到了第二个破解思路：能不能让这个return直接返回这个硬编码的字符串，以及那个FindPort函数能不能直接返回一个正确的值，这样就可以比较小的修改了，然后结果就是，不会！然后当场放弃。<br><img src="7.png" alt="Alt text" title="dll的NewReadString"></p>
+<ol start="5">
+<li>编译<br>然后就编译呗！用winrar打开jar，把编译后的这个jsyunew3.class替换掉,运行那个.exe，哦吼！<br><img src="8.png" alt="Alt text" title="哦吼。"><br>那还能怎么办，搜呗，既然是在窗口里，那很有可能在launcher这个里，用jad搜字符串找呗，然后就发现这个玩意果然在，那么，统统注释掉！<br><img src="9.png" alt="Alt text" title="统统注释！"><br>然后编译，打开！一路确认，然后又来一个，同样的操作，去jad里搜呗。<br><img src="10.png" alt="Alt text" title="又来一个"><br>嗯？没有？<br><img src="11.png" alt="Alt text" title="嗯？"><br>那肯定在其他类里，又不是只有一个类可以创建窗口，翻！<br>结果翻遍了每一个类，没有！<br>事情变得复杂了起来。那只有去分析main函数具体都做了什么了，然后看看为什么没有这一个字符串。</li>
+<li>回头继续分析main<br><img src="12.png" alt="Alt text" title="继续分析main"><br>分析得出： 这个while是不断地弹框，如果没有插加密狗，肯定读不出来l 就会是上边第4里边return的空字符串，因为已经硬编码写死返回值了，所以这个while直接跳过，进入最终的KenjoyDrawLauncher.j.a();</li>
+<li>追a();<br>哟，这不是刚注释了弹窗的那个方法嘛，接着往下看吧<br><img src="13.png" alt="Alt text" title="哟，这不熟悉的小老弟吗"><br>继续往下分析，从上往下，这是根据l创建了个json，然后操作了一番，咱这l肯定没有问题，就不管对l做什么了，没有意义。<br><img src="14.png" alt="Alt text" title="继续向下"><br>看最后，this.a(jsonObject);<br>不用说，追进去。<br>长这样<br><img src="15.png" alt="Alt text" title="追到a()"><br>简单解释一下代码吧：<br>if这里判断了是否存在，追进去看<br>b=D.b() 追进去D.b()发现用了core这个文件。那这个core应该也是个jar，然后WinRar打开试试，发现打不开，010打开看文件头，啥也不是。不是jar，往后继续分析代码<br>往下看发现，又用到了l，先看看this.a(b) 看看对文件core做了什么<br><img src="16.png" alt="Alt text" title="创建了临时文件"><br>看不懂（破解到后边看懂了，实则是解密byte流），但是看得出来输出了一个前缀xxx后缀xxx的临时文件，退出时删除，然后最后返回值就是这个临时文件。那咱就去看看！<br>把这个临时文件复制出来之后，尝试用WinRar打开，哎呀，打开了，反编译！</li>
+<li>反编译！<br>直接碰壁，一个源代码都反编译不出来。会不会是jadx不够强大，换换工具试试看，jd，luyten都试了，哪个都不行！<br><img src="17.png" alt="Alt text" title="反编译临时文件"><br>先保存一下进度，把这个临时文件重命名成core，替换掉安装目录里的core，然后让上边那个函数返回this.g的，直接返回file（执行了一堆寂寞）<br>然后我就去万能的Q群求助了，经过麦兜指点，忽略了一个问题，class的文件头（魔数）不对，不是class的文件头，也是这个时候知道了，文件头还叫魔数<br>既然文件头不对，那肯定就是加密了。继续分析！看看哪里解密class文件了！</li>
+<li>寻找解密class的地方<br>那就继续找第7步第三个图的C.a(this.a(b),bulabulabula);了<br>追进去这个a();瞧瞧看,好家伙，继承了ClassLoader，想必就是传说中的类加载器，又是知识盲区，硬着头皮看吧。研究这个玩意是花费时间比较久的。<br><img src="18.png" alt="Alt text" title="C.a()"><br>然后接下来再看a里都做了什么，翻来覆去的读。哪都不是解密class的啊！<br><img src="19.png" alt="Alt text" title="a()"><br>花了很长时间研究，然后后来脑子开窍了，既然是类加载器，那肯定是用来加载class的，既然加载class，文件头又对不上，那么加载之前一定是解密了，这个a里没有， 那肯定就在其他地方，寻找可疑函数。<br>最后定位到了findclass，英文直译：寻找类文件，嗯，满足猜想的一个方法。<br><img src="20.png" alt="Alt text" title="FindClass"><br>往里看,又发现了可疑方法DecodeClassFile,英文直译：解密类文件！<br>可算找到了，接下来事情就明朗了，跟搞core文件思路类似，还是大刀阔斧的修改，修改后如下，为啥要判断呢，因为要替换core里边的class。所以加上之后调试起来方便点。<br><img src="21.png" alt="Alt text" title="大刀阔斧修改后的FindClass"><br>将这个字节数组a，导出成文件的代码如下</li>
+</ol>
+<p>导出成文件写的代码也比较水,凑合看，这就是上边图例收起来的代码<br>也是通过导出s，判断出来传进来的s就是类的包名+类名，然后就这样输出了所有文件</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//尝试输出byte</span></span><br><span class="line">String d = s.replace(<span class="string">"."</span>,<span class="string">"\\"</span>);</span><br><span class="line">File file3 = <span class="keyword">new</span> File(<span class="string">"testtest\\"</span>+d+<span class="string">"class"</span>);</span><br><span class="line"><span class="keyword">if</span> (!file3.getParentFile().exists()) &#123;</span><br><span class="line">    file3.getParentFile().mkdirs();</span><br><span class="line">&#125;<span class="keyword">else</span> &#123;</span><br><span class="line">    file3.renameTo(<span class="keyword">new</span> File(<span class="string">"testtest\\"</span> + d + <span class="string">".class1"</span>));</span><br><span class="line">&#125;</span><br><span class="line">file3.createNewFile();</span><br><span class="line">OutputStream out3 = <span class="keyword">new</span> FileOutputStrea(file3);</span><br><span class="line">InputStream is3 = <span class="keyword">new</span> ByteArrayInputStrea(a);</span><br><span class="line"><span class="keyword">byte</span>[] buff3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line"><span class="keyword">int</span> len3 = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">while</span>((len3=is3.read(buff3))!=-<span class="number">1</span>)&#123;</span><br><span class="line">    out3.write(buff3, <span class="number">0</span>, len3);</span><br><span class="line">&#125;</span><br><span class="line">is3.close();</span><br><span class="line">out3.close();</span><br></pre></td></tr></table></figure>
+
+<p>为啥要判断文件是否存在，是因为！ core这个jar同路径下有大小写不同的两个同名class（混淆过）！ 在windows下不区分大小写！然后我就装了个linux虚拟机，又是一上午。下了个arm64的 咋都装不进vmware，后来发现下错了，然后才下了个x86_x64的。然后问百度找linux替换class的命令，鼓捣jdk之类的，放进去了。</p>
+<ol start="10">
+<li>一切ok之后！就到了找“再进行操作”字符串的步骤了！<br>找到是在core.jar\com\kenjoy\kenjoycnc\k\a这个类里边<br>跟上边一样，大刀阔斧的修改，发现无法编译！<br><img src="22.png" alt="Alt text" title="大刀阔斧修改后的a"><br>然后百度后的结果都指向了是因为混淆的原因。<br>然后没招了，祭出010editor，比较小剂量的修改，就是反转这两个if的判定结果，一个一个试。先反转第一个的判定结果<br>用jclasslib跟010都打开a.class<br>jclasslib：<br><img src="23.png" alt="Alt text" title="jclasslib下的a"><br>根据jclasslib的指示，在010editor里边找到method[0]的code部分的第137行<br>010editor：<br><img src="24.png" alt="Alt text" title="010editor下的a"><br>然后在jclasslib里点击ifeq，弹出来的页面搜索ifeq,往下看就能看到0x99对应ifeq,与ifeq相反的ifne的值为0x9A。<br><img src="25.png" alt="Alt text" title="查if的每个值"><br>接下来只需要将99改为9A然后放回core里试试。<br><img src="26.png" alt="Alt text" title="修改ifeq为ifne"><br>打开exe<br><img src="27.png" alt="Alt text" title="大功告成"><br>大功告成</li>
+</ol>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>一边写一边复盘了整个过程，发现有很多地方确实是运气好，比如一开始，壳都没有查，混淆也没看，结果就是没有混淆没有壳，然后我才能很顺利的将第一个jar给反编译之后修改并编译回去。</p>
+<h2 id="最最后"><a href="#最最后" class="headerlink" title="最最后"></a>最最后</h2><p>提供下载链接<br>源文件+crack<br>链接：<a href="https://pan.baidu.com/s/1x5FBspSXtBeKGaqMsccckg" target="_blank" rel="noopener">https://pan.baidu.com/s/1x5FBspSXtBeKGaqMsccckg</a><br>提取码：65a9<br>源文件：<br>链接：<a href="https://pan.baidu.com/s/1L-eCjF739AQD9BDml6_tCQ" target="_blank" rel="noopener">https://pan.baidu.com/s/1L-eCjF739AQD9BDml6_tCQ</a><br>提取码：gvhz </p>
+<h2 id="侵删"><a href="#侵删" class="headerlink" title="侵删!!"></a>侵删!!</h2>
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/写字机/" rel="tag"><i class="fa fa-tag"></i> 写字机</a>
+            
+              <a href="/tags/奎享雕刻/" rel="tag"><i class="fa fa-tag"></i> 奎享雕刻</a>
+            
+              <a href="/tags/破解/" rel="tag"><i class="fa fa-tag"></i> 破解</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/10/26/使用IDEA中的Maven插件将本地Jar包添加到本地的Maven仓库并引用/" rel="next" title="使用IDEA中的Maven插件将本地Jar包添加到本地的Maven仓库并引用">
+                  <i class="fa fa-chevron-left"></i> 使用IDEA中的Maven插件将本地Jar包添加到本地的Maven仓库并引用
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#奎享雕刻1-7-8大刀阔斧的破解记录"><span class="nav-number">1.</span> <span class="nav-text">奎享雕刻1.7.8大刀阔斧的破解记录</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#本文仅用于学习交流，禁止用于商业用途"><span class="nav-number">1.1.</span> <span class="nav-text">本文仅用于学习交流，禁止用于商业用途</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#起因"><span class="nav-number">1.2.</span> <span class="nav-text">起因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.3.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#心得"><span class="nav-number">1.4.</span> <span class="nav-text">心得</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正文"><span class="nav-number">1.5.</span> <span class="nav-text">正文</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#工具"><span class="nav-number">1.5.1.</span> <span class="nav-text">工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#下载-安装-分析"><span class="nav-number">1.5.2.</span> <span class="nav-text">下载/安装/分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最后"><span class="nav-number">1.6.</span> <span class="nav-text">最后</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最最后"><span class="nav-number">1.7.</span> <span class="nav-text">最最后</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#侵删"><span class="nav-number">1.8.</span> <span class="nav-text">侵删!!</span></a></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.gif"
+      alt="mz Wu">
+  <p class="site-author-name" itemprop="name">mz Wu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="cc-license motion-element" itemprop="license">
+    
+  
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">mz Wu</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+    
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.4.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
